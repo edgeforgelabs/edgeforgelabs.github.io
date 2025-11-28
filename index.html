@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDGEFORGE LABS | Industrial Intelligence</title>
+    <meta name="description" content="Full-Stack IoT Product Development & Embedded AI Solutions.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        deepBlue: '#082934',
+                        cyberCyan: '#00C7CE',
+                        secondaryTeal: '#038A95',
+                        textMain: '#FFFFFF',
+                        textGray: '#94a3b8',
+                        darkerBlue: '#051a21',
+                        terminalBlack: '#020d11',
+                        neonGreen: '#39FF14', 
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Poppins', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 15px rgba(0, 199, 206, 0.2)',
+                        'neon-strong': '0 0 25px rgba(0, 199, 206, 0.5)',
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)",
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'flash': 'flash 1s steps(2, start) infinite',
+                        'shimmer': 'shimmer 2s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        flash: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.4' }
+                        },
+                        shimmer: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- GLOBAL --- */
+        body {
+            background-color: #051a21;
+            color: #FFFFFF;
+            overflow-x: hidden;
+            cursor: none; 
+        }
+        
+        @media (pointer: coarse) {
+            body { cursor: auto; }
+            .cursor-dot, .cursor-outline { display: none !important; }
+        }
+
+        /* Custom Cursor */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 999999; 
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background-color: #00C7CE;
+            box-shadow: 0 0 10px #00C7CE;
+        }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(0, 199, 206, 0.5);
+            transition: width 0.15s, height 0.15s, background-color 0.15s, border-color 0.15s;
+        }
+        
+        body.hovering .cursor-outline {
+            width: 60px; height: 60px;
+            background-color: rgba(0, 199, 206, 0.1);
+            border-color: #39FF14; 
+            box-shadow: 0 0 20px rgba(0, 199, 206, 0.2);
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(5, 26, 33, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .bento-card {
+            background: rgba(8, 41, 52, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .bento-card:hover {
+            transform: translateY(-2px);
+            background: rgba(8, 41, 52, 0.6);
+            border-color: rgba(0, 199, 206, 0.3);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        /* Typography */
+        .text-gradient {
+            background: linear-gradient(135deg, #FFFFFF 0%, #00C7CE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* AI Response Styling */
+        .ai-response { 
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+        .ai-response h1, .ai-response h2, .ai-response h3 { 
+            color: #00C7CE; 
+            font-weight: 700; 
+            margin-top: 1.5em; 
+            margin-bottom: 0.5em; 
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid rgba(0, 199, 206, 0.3);
+            padding-bottom: 0.2em;
+        }
+        .ai-response strong { color: #FFFFFF; font-weight: 700; }
+        .ai-response ul { list-style-type: none; padding-left: 0; margin-top: 0.5em; }
+        .ai-response li { 
+            margin-bottom: 0.4em; 
+            color: #e2e8f0;
+            padding-left: 1.2em;
+            position: relative;
+        }
+        .ai-response li::before {
+            content: ">";
+            color: #39FF14;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        .ai-response p { margin-bottom: 1em; color: #cbd5e1; }
+
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020d11; }
+        ::-webkit-scrollbar-thumb { background: #038A95; border-radius: 3px; }
+        
+        /* Canvas */
+        #network-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; opacity: 0.4; pointer-events: none; 
+        }
+
+        /* Z-Index Management */
+        section, header, footer, nav { position: relative; z-index: 10; }
+        #project-modal { z-index: 100000; } 
+
+        /* SVG Animations */
+        .path-draw { stroke-dasharray: 2000; stroke-dashoffset: 2000; transition: stroke-dashoffset 2s ease-in-out; }
+        .step-active .path-draw { stroke-dashoffset: 0; }
+        .step-active .animate-flash { animation: flash 1s infinite; }
+        .step-active .opacity-reveal { opacity: 1; transition: opacity 1s ease-in; }
+
+        /* Range Input */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+            background: #00C7CE; cursor: pointer; margin-top: -6px; box-shadow: 0 0 10px #00C7CE;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px; cursor: pointer; background: #1e3a45; border-radius: 2px;
+        }
+        
+        /* Tech Icons */
+        .tech-icon { filter: grayscale(100%) opacity(0.6); transition: all 0.4s ease; }
+        .tech-icon:hover { filter: grayscale(0%) opacity(1); transform: scale(1.1); }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyberCyan selection:text-deepBlue">
+
+    <!-- CUSTOM CURSOR ELEMENTS -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- CANVAS BACKGROUND -->
+    <canvas id="network-canvas"></canvas>
+
+    <!-- GRID OVERLAY -->
+    <div class="fixed inset-0 bg-grid-pattern bg-[size:40px_40px] opacity-10 pointer-events-none z-0"></div>
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 glass-panel top-0 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 cursor-pointer flex items-center gap-3 group" data-hover-trigger>
+                     <img src="Logo.png" alt="EdgeForge Isotype" class="h-9 w-auto group-hover:drop-shadow-[0_0_8px_rgba(0,199,206,0.5)] transition-all">
+                    <div class="flex flex-col leading-none">
+                        <span class="font-display font-bold text-xl tracking-wider text-white">EDGEFORGE</span>
+                        <span class="font-sans font-medium text-xs tracking-[0.3em] text-secondaryTeal">LABS</span>
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#services" class="text-sm font-medium text-gray-300 hover:text-cyberCyan transition-colors" data-hover-trigger>Services</a>
+                    <a href="#process" class="text-sm font-medium text-gray-300 hover:text-cyberCyan transition-colors" data-hover-trigger>Process</a>
+                    <a href="#estimator" class="text-sm font-medium text-gray-300 hover:text-cyberCyan transition-colors" data-hover-trigger>Estimator</a>
+                    <a href="#ai-forge" class="text-cyberCyan hover:text-white transition-colors text-sm font-medium flex items-center gap-1" data-hover-trigger>
+                        <i class="ph-fill ph-sparkle"></i> The Forge AI
+                    </a>
+                    <a href="https://www.upwork.com/freelancers/~016b8f649e176d81df?mp_source=share" target="_blank" class="px-5 py-2 rounded border border-cyberCyan/50 text-cyberCyan hover:bg-cyberCyan hover:text-deepBlue transition-all duration-300 text-sm font-medium shadow-neon" data-hover-trigger>
+                        Hire Us
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" class="text-gray-300 hover:text-white p-2" id="mobile-menu-btn" onclick="window.toggleMobileMenu()">
+                        <i class="ph ph-list text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden glass-panel border-t border-white/5 absolute w-full bg-deepBlue" id="mobile-menu">
+             <div class="px-4 pt-4 pb-6 space-y-3">
+                <a href="#services" class="block text-gray-300 py-2" onclick="window.toggleMobileMenu()">Services</a>
+                <a href="#process" class="block text-gray-300 py-2" onclick="window.toggleMobileMenu()">Process</a>
+                <a href="#estimator" class="block text-gray-300 py-2" onclick="window.toggleMobileMenu()">Estimator</a>
+                <a href="#ai-forge" class="block text-cyberCyan py-2" onclick="window.toggleMobileMenu()">The Forge AI</a>
+                <hr class="border-white/10">
+                <a href="https://www.upwork.com/freelancers/~016b8f649e176d81df?mp_source=share" target="_blank" class="block text-gray-400 py-2 hover:text-[#14a800]" onclick="window.toggleMobileMenu()">Upwork</a>
+                <a href="mailto:projects@edgeforgelabs.com" class="block text-gray-400 py-2 hover:text-cyberCyan" onclick="window.toggleMobileMenu()">Email</a>
+                <a href="https://linkedin.com" class="block text-gray-400 py-2 hover:text-[#0077b5]" onclick="window.toggleMobileMenu()">LinkedIn</a>
+             </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <div class="absolute top-1/4 left-0 w-96 h-96 bg-secondaryTeal/20 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-cyberCyan/10 rounded-full blur-[150px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="reveal flex flex-col items-center">
+                <div class="inline-flex items-center gap-2 mb-6 px-4 py-1.5 border border-cyberCyan/30 rounded-full bg-deepBlue/50 backdrop-blur-sm">
+                    <div class="w-2 h-2 rounded-full bg-cyberCyan animate-pulse"></div>
+                    <span class="text-cyberCyan text-xs font-mono tracking-widest uppercase">System Operational</span>
+                </div>
+                
+                <h1 id="hero-title" class="font-display font-extrabold text-5xl md:text-7xl lg:text-8xl tracking-tight mb-6 leading-[1.1]">
+                    Forging Intelligence <br>
+                    <span class="text-gradient">at the Edge</span>
+                </h1>
+                
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-300 font-light leading-relaxed">
+                    Electronics and Automation Engineering specialized in "full-stack" intelligent systems. 
+                    Bridging the gap between industrial control, custom hardware, and embedded Machine Learning.
+                </p>
+
+                <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto">
+                    <a href="#estimator" class="px-8 py-4 bg-cyberCyan text-deepBlue font-bold rounded-sm shadow-neon hover:shadow-neon-strong transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 group" data-hover-trigger>
+                        Calculate Project Cost
+                        <i class="ph-bold ph-calculator group-hover:rotate-12 transition-transform"></i>
+                    </a>
+                    <button onclick="window.openProjectModal('p1')" class="px-8 py-4 border border-gray-600 text-white font-medium rounded-sm hover:border-gray-400 hover:bg-white/5 transition-all duration-300 flex items-center justify-center gap-2" data-hover-trigger>
+                        View Case Studies
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 animate-float">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-cyberCyan">Scroll</span>
+            <div class="w-px h-12 bg-gradient-to-b from-cyberCyan to-transparent"></div>
+        </div>
+    </header>
+
+    <!-- TECH STACK -->
+    <section class="py-12 border-y border-white/5 bg-black/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+             <p class="text-center text-xs font-mono text-gray-500 uppercase tracking-widest mb-8">Powering solutions with industry standards</p>
+             <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-80">
+                <div class="tech-icon text-3xl text-white" title="Python" data-hover-trigger><i class="ph-bold ph-file-py"></i></div>
+                <div class="tech-icon text-3xl text-white" title="AWS" data-hover-trigger><i class="ph-bold ph-cloud"></i></div>
+                <div class="tech-icon text-3xl text-white" title="C++" data-hover-trigger><i class="ph-bold ph-code"></i></div>
+                <div class="tech-icon text-3xl text-white" title="Linux" data-hover-trigger><i class="ph-bold ph-linux-logo"></i></div>
+                <div class="tech-icon text-3xl text-white" title="Github" data-hover-trigger><i class="ph-bold ph-github-logo"></i></div>
+                <div class="tech-icon text-3xl text-white" title="Docker" data-hover-trigger><i class="ph-bold ph-hard-drives"></i></div>
+             </div>
+        </div>
+    </section>
+
+    <!-- SERVICES (BENTO GRID) -->
+    <section id="services" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal">
+                <div>
+                    <span class="text-cyberCyan font-mono text-xs tracking-wider">CORE SERVICES</span>
+                    <h2 class="font-display font-bold text-3xl md:text-4xl mt-2">Engineering Stack</h2>
+                </div>
+            </div>
+
+            <!-- GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-3 grid-rows-2 gap-6 h-auto md:h-[600px]">
+                
+                <!-- Cell 1: IoT -->
+                <div class="bento-card rounded-2xl p-0 md:row-span-2 flex flex-col justify-between group cursor-pointer" onclick="window.openProjectModal('iot')" data-hover-trigger>
+                    <div class="h-40 w-full bg-cover bg-center relative" style="background-image: url('https://placehold.co/600x400/082934/00C7CE?text=PCB+View');">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-deepBlue/95"></div>
+                    </div>
+                    <div class="p-8 -mt-10 relative z-10 flex-grow flex flex-col justify-between">
+                        <div>
+                             <div class="w-16 h-16 bg-deepBlue/80 rounded-lg flex items-center justify-center border border-white/10 mb-4 text-cyberCyan">
+                                <i class="ph ph-circuitry text-4xl"></i>
+                            </div>
+                            <h3 class="font-display font-bold text-2xl mb-2 text-white group-hover:text-cyberCyan transition-colors">Full-Stack IoT Product Development</h3>
+                            <p class="text-sm text-gray-400 leading-relaxed">
+                                From concept to production-ready prototype. Schematic & PCB design (KiCad, Altium), firmware in C/C++ for MCUs (ESP32, STM32), and wireless integration (BLE, LoRaWAN).
+                            </p>
+                             <span class="text-xs font-bold text-white border-b border-cyberCyan pb-0.5 group-hover:text-cyberCyan transition-colors mt-4 inline-block">See IoT Capabilities -></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cell 2: Edge AI -->
+                <div class="bento-card rounded-2xl p-0 md:col-span-2 flex flex-col md:flex-row items-center justify-start gap-6 group cursor-pointer" onclick="window.openProjectModal('ai')" data-hover-trigger>
+                     <div class="p-8 flex-shrink-0 flex items-center justify-center md:h-full">
+                         <!-- Big Icon Left -->
+                         <div class="w-24 h-24 bg-deepBlue/50 rounded-full flex items-center justify-center border border-cyberCyan/20 shadow-neon">
+                             <i class="ph ph-brain text-5xl text-cyberCyan"></i>
+                         </div>
+                     </div>
+                    <div class="p-8 pl-0 max-w-xl z-10">
+                        <h3 class="font-display font-bold text-2xl text-white group-hover:text-cyberCyan transition-colors mb-3">Edge AI & TinyML Solutions</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            High-performance, low-latency AI models directly on microcontrollers. Deploying optimized ML models (TensorFlow Lite) for real-time applications like Predictive Maintenance and Embedded Computer Vision.
+                        </p>
+                         <span class="text-xs font-bold text-white border-b border-cyberCyan pb-0.5 group-hover:text-cyberCyan transition-colors mt-3 inline-block">See AI Solutions -></span>
+                    </div>
+                    <!-- Image Placeholder Overlay -->
+                    <div class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none mix-blend-overlay" style="background-image: url('https://placehold.co/800x400/051a21/038A95?text=Neural+Net');"></div>
+                </div>
+
+                <!-- Cell 3: Industrial -->
+                <div class="bento-card rounded-2xl p-8 group cursor-pointer" onclick="window.openProjectModal('p2')" data-hover-trigger>
+                    <i class="ph ph-factory text-3xl text-cyberCyan mb-4"></i>
+                    <h3 class="font-display font-bold text-xl mb-2">Intelligent Industrial Automation (IIoT)</h3>
+                    <p class="text-xs text-gray-400 mb-4">
+                        Modernizing "legacy" industrial systems. Connecting PLCs (Siemens, Rockwell) to modern IT systems and implementing IIoT solutions (OPC UA).
+                    </p>
+                    <span class="text-xs font-bold text-white border-b border-cyberCyan pb-0.5 group-hover:text-cyberCyan transition-colors">Explore Solutions -></span>
+                </div>
+
+                <!-- Cell 4: Cloud -->
+                <div class="bento-card rounded-2xl p-8 group" data-hover-trigger>
+                    <i class="ph ph-cloud-arrow-up text-3xl text-cyberCyan mb-4"></i>
+                    <h3 class="font-display font-bold text-xl mb-2">Cloud & Dashboards</h3>
+                    <p class="text-xs text-gray-400 mb-4">
+                        Unlock real-time data for process optimization. Secure telemetry pipelines to AWS IoT Core or Azure with custom dashboards.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESS SECTION -->
+    <section id="process" class="py-24 bg-[#020d11] border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <span class="text-cyberCyan font-mono text-xs tracking-wider">WORKFLOW</span>
+                <h2 class="font-display font-bold text-3xl mt-2">Our Process</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+                <div class="hidden md:block absolute top-[50px] left-0 w-full h-0.5 bg-gray-800 -z-0"></div>
+
+                <!-- Step 1 -->
+                <div class="relative z-10 flex flex-col items-center text-center reveal step-item" id="step1">
+                    <div class="w-24 h-24 bg-deepBlue border-2 border-gray-700 rounded-full flex items-center justify-center mb-6 transition-all duration-500 icon-container relative bg-[#051a21]">
+                         <svg width="50" height="50" viewBox="0 0 160 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-cyberCyan">
+                             <path class="path-draw" d="M5 15 H155 L150 30 C140 35 130 45 125 55 C120 65 130 80 135 80 H105 C105 70 95 75 80 75 C65 75 55 70 55 80 H25 C30 70 40 55 35 45 C30 35 20 35 10 30 L5 15 Z" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/>
+                             <path class="path-draw" d="M105 80 C105 70 95 75 80 75 C65 75 55 70 55 80" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.7"/>
+                        </svg>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2 text-white">Analysis</h4>
+                    <p class="text-xs text-gray-500 px-4">Requirements & Feasibility Study</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative z-10 flex flex-col items-center text-center reveal step-item" id="step2">
+                    <div class="w-24 h-24 bg-deepBlue border-2 border-gray-700 rounded-full flex items-center justify-center mb-6 transition-all duration-500 icon-container bg-[#051a21]">
+                         <svg width="50" height="50" viewBox="0 0 160 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-cyberCyan">
+                                <path d="M5 15 H155 L150 30 C140 35 130 45 125 55 C120 65 130 80 135 80 H105 C105 70 95 75 80 75 C65 75 55 70 55 80 H25 C30 70 40 55 35 45 C30 35 20 35 10 30 L5 15 Z" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.3"/>
+                                <rect class="path-draw" x="65" y="25" width="30" height="30" rx="4" stroke="currentColor" stroke-width="4" fill="none"/>
+                                <path class="path-draw" d="M65 35 H52 L48 30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path class="path-draw" d="M65 45 H48" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path class="path-draw" d="M65 53 L52 65" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path class="path-draw" d="M75 25 V20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path class="path-draw" d="M85 25 V20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path class="path-draw" d="M95 35 H108 L112 30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path class="path-draw" d="M95 45 H112" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path class="path-draw" d="M95 53 L108 65" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path class="path-draw" d="M72 55 V68" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path class="path-draw" d="M88 55 V68" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2 text-white">Schematic</h4>
+                    <p class="text-xs text-gray-500 px-4">PCB Layout & Component Routing</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative z-10 flex flex-col items-center text-center reveal step-item" id="step3">
+                    <div class="w-24 h-24 bg-deepBlue border-2 border-gray-700 rounded-full flex items-center justify-center mb-6 transition-all duration-500 icon-container bg-[#051a21]">
+                         <svg width="50" height="50" viewBox="0 0 160 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-cyberCyan">
+                                <path d="M5 15 H155 L150 30 C140 35 130 45 125 55 C120 65 130 80 135 80 H105 C105 70 95 75 80 75 C65 75 55 70 55 80 H25 C30 70 40 55 35 45 C30 35 20 35 10 30 L5 15 Z" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.3"/>
+                                <path d="M65 35 H52 L48 30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M65 45 H48" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M65 53 L52 65" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M75 25 V20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M85 25 V20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M95 35 H108 L112 30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M95 45 H112" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M95 53 L108 65" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M72 55 V68" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M88 55 V68" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                <rect x="65" y="25" width="30" height="30" rx="4" fill="currentColor" class="animate-flash"/>
+                        </svg>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2 text-white">Firmware</h4>
+                    <p class="text-xs text-gray-500 px-4">C/C++ Coding & Logic Implementation</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="relative z-10 flex flex-col items-center text-center reveal step-item" id="step4">
+                    <div class="w-24 h-24 bg-deepBlue border-2 border-gray-700 rounded-full flex items-center justify-center mb-6 transition-all duration-500 icon-container bg-[#051a21]">
+                        <svg width="50" height="50" viewBox="0 0 160 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-cyberCyan opacity-0 opacity-reveal">
+                            <path d="M5 15 H155 L150 30 C140 35 130 45 125 55 C120 65 130 80 135 80 H105 C105 70 95 75 80 75 C65 75 55 70 55 80 H25 C30 70 40 55 35 45 C30 35 20 35 10 30 L5 15 Z" fill="#020d11" stroke="currentColor" stroke-width="2"/>
+                            <rect x="65" y="25" width="30" height="30" rx="4" fill="#00C7CE"/>
+                            <path d="M65 35 H52 L48 30" stroke="#00C7CE" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="48" cy="30" r="2" fill="#082934" stroke="#00C7CE" stroke-width="2"/>
+                            <path d="M65 45 H48" stroke="#00C7CE" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="48" cy="45" r="2" fill="#082934" stroke="#00C7CE" stroke-width="2"/>
+                            <path d="M65 53 L52 65" stroke="#00C7CE" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="52" cy="65" r="2" fill="#082934" stroke="#00C7CE" stroke-width="2"/>
+                            <path d="M75 25 V20" stroke="#00C7CE" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="75" cy="20" r="2" fill="#082934" stroke="#00C7CE" stroke-width="2"/>
+                            <path d="M85 25 V20" stroke="#00C7CE" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="85" cy="20" r="2" fill="#082934" stroke="#00C7CE" stroke-width="2"/>
+                            <path d="M95 35 H108 L112 30" stroke="#00C7CE" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="112" cy="30" r="2" fill="#082934" stroke="#00C7CE" stroke-width="2"/>
+                            <path d="M95 45 H112" stroke="#00C7CE" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="112" cy="45" r="2" fill="#082934" stroke="#00C7CE" stroke-width="2"/>
+                            <path d="M95 53 L108 65" stroke="#00C7CE" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="108" cy="65" r="2" fill="#082934" stroke="#00C7CE" stroke-width="2"/>
+                            <path d="M72 55 V68" stroke="#00C7CE" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="72" cy="68" r="2" fill="#082934" stroke="#00C7CE" stroke-width="2"/>
+                            <path d="M88 55 V68" stroke="#00C7CE" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="88" cy="68" r="2" fill="#082934" stroke="#00C7CE" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2 text-white">Prototype</h4>
+                    <p class="text-xs text-gray-500 px-4">Validation & Testing</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECT COST ESTIMATOR -->
+    <section id="estimator" class="py-24 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+             <div class="text-center mb-12 reveal">
+                <span class="text-cyberCyan font-mono text-xs tracking-wider">CALCULATOR</span>
+                <h2 class="font-display font-bold text-3xl md:text-4xl mt-2">Project Estimator</h2>
+                <p class="text-textGray mt-2">Get a rough range for your hardware development needs.</p>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-8 md:p-12 reveal">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-sm font-bold mb-2 text-white">Complexity Level</label>
+                            <input type="range" min="1" max="3" value="1" class="w-full" id="complexity-slider">
+                            <div class="flex justify-between text-xs text-gray-500 mt-2 font-mono">
+                                <span>MVP</span>
+                                <span>Standard</span>
+                                <span>Advanced</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <label class="block text-sm font-bold text-white">Core Requirements</label>
+                            <label class="flex items-center space-x-3 cursor-pointer group" data-hover-trigger>
+                                <div class="w-5 h-5 border border-gray-600 rounded flex items-center justify-center group-hover:border-cyberCyan transition-colors">
+                                    <input type="checkbox" class="appearance-none w-3 h-3 bg-cyberCyan opacity-0 checked:opacity-100 rounded-[1px]" id="check-pcb">
+                                </div>
+                                <span class="text-sm text-gray-300">Custom PCB Design</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer group" data-hover-trigger>
+                                <div class="w-5 h-5 border border-gray-600 rounded flex items-center justify-center group-hover:border-cyberCyan transition-colors">
+                                    <input type="checkbox" class="appearance-none w-3 h-3 bg-cyberCyan opacity-0 checked:opacity-100 rounded-[1px]" id="check-fw">
+                                </div>
+                                <span class="text-sm text-gray-300">Firmware Development</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer group" data-hover-trigger>
+                                <div class="w-5 h-5 border border-gray-600 rounded flex items-center justify-center group-hover:border-cyberCyan transition-colors">
+                                    <input type="checkbox" class="appearance-none w-3 h-3 bg-cyberCyan opacity-0 checked:opacity-100 rounded-[1px]" id="check-cloud">
+                                </div>
+                                <span class="text-sm text-gray-300">Cloud/Dashboard</span>
+                            </label>
+                             <label class="flex items-center space-x-3 cursor-pointer group" data-hover-trigger>
+                                <div class="w-5 h-5 border border-gray-600 rounded flex items-center justify-center group-hover:border-cyberCyan transition-colors">
+                                    <input type="checkbox" class="appearance-none w-3 h-3 bg-cyberCyan opacity-0 checked:opacity-100 rounded-[1px]" id="check-ai">
+                                </div>
+                                <span class="text-sm text-gray-300">Edge AI / TinyML</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="bg-deepBlue rounded-xl p-6 flex flex-col justify-center items-center text-center border border-white/5 relative overflow-hidden">
+                         <div class="absolute inset-0 bg-gradient-to-br from-cyberCyan/5 to-transparent pointer-events-none"></div>
+                         
+                         <span class="text-gray-400 text-xs uppercase tracking-widest mb-2">Estimated Range</span>
+                         <div class="font-mono text-4xl md:text-5xl text-white font-bold mb-2" id="price-display">
+                             $2k - $5k
+                         </div>
+                         <p class="text-[10px] text-gray-500 max-w-xs">
+                             *Rough estimate. Final quote requires detailed analysis.
+                         </p>
+                         <!-- Fixed Calculator Button -->
+                         <a href="https://www.upwork.com/freelancers/~016b8f649e176d81df?mp_source=share" target="_blank" class="relative z-10 mt-6 px-6 py-3 bg-white text-deepBlue font-bold text-sm rounded hover:bg-gray-200 transition-colors w-full flex items-center justify-center" data-hover-trigger>
+                             Get Official Quote
+                         </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECT MODAL -->
+    <div id="project-modal" class="fixed inset-0 hidden items-center justify-center bg-black/80 opacity-0 transition-opacity duration-300" style="z-index: 100000;">
+        <div class="bg-deepBlue border border-cyberCyan/30 rounded-xl max-w-4xl w-full mx-4 overflow-hidden transform scale-95 transition-transform duration-300 shadow-2xl relative" id="modal-content">
+            <button onclick="window.closeProjectModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white z-10 p-2 bg-black/50 rounded-full" data-hover-trigger>
+                <i class="ph-bold ph-x text-xl"></i>
+            </button>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 h-[80vh] md:h-[600px]">
+                <div class="bg-black/50 flex items-center justify-center relative p-8">
+                     <div class="w-full h-64 bg-gradient-to-tr from-cyberCyan/10 to-secondaryTeal/10 rounded-lg flex items-center justify-center border border-white/5">
+                        <i class="ph ph-images text-6xl text-cyberCyan opacity-50"></i>
+                    </div>
+                    <p class="absolute bottom-8 text-xs text-gray-500">Project Screenshots would load here.</p>
+                </div>
+                
+                <div class="p-8 overflow-y-auto custom-scrollbar">
+                    <span class="text-cyberCyan text-xs font-mono mb-2 block" id="modal-tech">TECH STACK</span>
+                    <h2 class="font-display font-bold text-3xl text-white mb-6" id="modal-title">Project Title</h2>
+                    
+                    <div class="space-y-6 text-sm text-gray-300">
+                        <div>
+                            <h4 class="text-white font-bold mb-2">The Challenge</h4>
+                            <p id="modal-challenge">Description of the client's problem...</p>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold mb-2">The Solution</h4>
+                            <p id="modal-solution">How we solved it...</p>
+                        </div>
+                         <div class="pt-6 border-t border-white/10">
+                            <a href="https://www.upwork.com/freelancers/~016b8f649e176d81df?mp_source=share" target="_blank" class="inline-flex items-center px-6 py-3 bg-cyberCyan text-deepBlue font-bold rounded hover:bg-white transition-colors" data-hover-trigger>
+                                Discuss similar project <i class="ph-bold ph-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI FORGE SECTION -->
+    <section id="ai-forge" class="py-24 relative overflow-hidden">
+         <div class="absolute top-0 right-0 w-1/2 h-full bg-cyberCyan opacity-5 blur-[150px] pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-12 reveal">
+                <div class="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-cyberCyan/10 border border-cyberCyan/30">
+                    <i class="ph-fill ph-sparkle text-cyberCyan"></i>
+                    <span class="text-cyberCyan text-xs font-bold uppercase tracking-wider">Powered by Gemini AI</span>
+                </div>
+                <h2 class="font-display font-bold text-3xl md:text-4xl">AI Project Architect</h2>
+                <p class="text-textGray mt-4 max-w-2xl mx-auto" data-i18n="ai_desc">
+                    Describe your hardware idea. Our AI will generate a preliminary technical blueprint.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                <div class="md:col-span-2 reveal">
+                    <div class="bg-deepBlue/80 backdrop-blur-md p-6 rounded-xl border border-white/10 h-full flex flex-col shadow-lg">
+                        <label class="block text-sm font-medium text-cyberCyan mb-2" data-i18n="ai_label">Project Vision</label>
+                        <textarea id="projectInput" class="w-full flex-grow bg-darkerBlue/50 border border-white/10 rounded-lg p-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-cyberCyan focus:ring-1 focus:ring-cyberCyan transition-all resize-none font-mono" placeholder="e.g., A solar-powered cattle tracker..." rows="6"></textarea>
+                        
+                        <div class="mt-4 pt-4 border-t border-white/5">
+                            <button id="generateBtn" onclick="window.generateBlueprint()" class="w-full py-3 px-4 bg-gradient-to-r from-secondaryTeal to-cyberCyan text-deepBlue font-bold rounded-lg shadow-neon hover:shadow-neon-hover transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-4 group" data-hover-trigger>
+                                <span id="btnText">Forge Blueprint ✨</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-3 reveal" style="transition-delay: 200ms;">
+                    <div class="terminal-window rounded-xl h-full min-h-[400px] flex flex-col bg-[#020d11] border border-cyberCyan/20 box-shadow-neon">
+                        <div class="bg-deepBlue border-b border-cyberCyan/20 px-4 py-2 flex items-center justify-between">
+                            <div class="flex gap-1.5">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="text-[10px] font-mono text-cyberCyan/70">arch_v2.0.exe</div>
+                        </div>
+
+                        <div class="p-6 font-mono text-sm relative flex-grow overflow-y-auto custom-scrollbar bg-terminalBlack" style="max-height: 400px;">                            
+                            <div id="terminalContent" class="text-gray-400 space-y-2">
+                                <p class="text-cyberCyan">> SYSTEM READY...</p>
+                                <p>> WAITING FOR INPUT...</p>
+                                <span class="animate-pulse">_</span>
+                            </div>
+
+                            <div id="loadingState" class="hidden h-full flex flex-col items-center justify-center space-y-4">
+                                <div class="w-16 h-16 border-4 border-cyberCyan/20 border-t-cyberCyan rounded-full animate-spin"></div>
+                                <div class="text-cyberCyan text-xs animate-pulse">ANALYZING REQUIREMENTS...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="bg-[#051a21] py-16 border-t border-white/5 text-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+                <div class="flex flex-col items-center">
+                     <div class="flex items-center gap-3 mb-4 group" data-hover-trigger>
+                        <img src="Logo.png" alt="EdgeForge Isotype" class="h-8 w-auto group-hover:scale-110 transition-transform">
+                        <!-- Updated LABS text styling here -->
+                        <div class="flex flex-col leading-none">
+                            <span class="font-display font-bold text-lg tracking-wider text-white">EDGEFORGE</span>
+                            <span class="font-sans font-medium text-xs tracking-[0.3em] text-secondaryTeal">LABS</span>
+                        </div>
+                    </div>
+                    <p class="text-textGray text-sm leading-relaxed">
+                        Professional Embedded Engineering.<br>Quito, Ecuador - Global Remote.
+                    </p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <h4 class="text-white font-bold mb-4 font-mono text-xs tracking-widest uppercase">Contact</h4>
+                    <ul class="space-y-3">
+                        <li>
+                            <a href="https://www.upwork.com/freelancers/~016b8f649e176d81df?mp_source=share" target="_blank" class="text-gray-400 hover:text-[#14a800] transition-colors text-sm" data-hover-trigger>Upwork Profile</a>
+                        </li>
+                        <li>
+                            <a href="mailto:projects@edgeforgelabs.com" class="text-gray-400 hover:text-cyberCyan transition-colors text-sm" data-hover-trigger>Email Us</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="flex flex-col items-center">
+                    <h4 class="text-white font-bold mb-4 font-mono text-xs tracking-widest uppercase">Social</h4>
+                    <ul class="space-y-3">
+                        <li>
+                            <a href="https://linkedin.com" target="_blank" class="text-gray-400 hover:text-[#0077b5] transition-colors text-sm" data-hover-trigger>LinkedIn</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 text-xs text-gray-600">
+                <p>&copy; 2025 EdgeForge Labs. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        /* --- GLOBAL SCOPE FUNCTIONS --- */
+        // 1. Mobile Menu
+        window.toggleMobileMenu = function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            const navbar = document.getElementById('navbar');
+            if (!menu.classList.contains('hidden')) {
+                navbar.style.background = '#082934';
+            } else {
+                navbar.style.background = 'rgba(5, 26, 33, 0.8)';
+            }
+        };
+
+        // 2. Modal Logic (Updated with data)
+        const projects = {
+            p1: {
+                title: "Smart Agri-Sensor Array",
+                tech: "LoRaWAN + ESP32 + Solar",
+                challenge: "The client needed to monitor soil moisture across a 50-hectare farm without cellular coverage.",
+                solution: "Designed a custom PCB with ESP32 and LoRaWAN module. Implemented deep-sleep cycles allowing 5 years of operation."
+            },
+            p2: {
+                title: "Predictive Maintenance Dashboard",
+                tech: "Python + SCADA + React",
+                challenge: "Factory managers reacted to breakdowns only after they happened, causing 15% downtime.",
+                solution: "Built a Python middleware to read Modbus data from legacy PLCs, analyze vibration trends, and visualize 'Health Scores'."
+            },
+            iot: {
+                title: "Industrial IoT Gateway",
+                tech: "STM32 + 4G LTE + MQTT",
+                challenge: "Bridge legacy RS485 sensors to the cloud securely with remote OTA update capabilities.",
+                solution: "Engineered a robust gateway with TLS 1.3 encryption, local buffering for network outages, and dual-bank firmware updates."
+            },
+            ai: {
+                title: "Edge Vision Quality Control",
+                tech: "ESP32-S3 + TensorFlow Lite",
+                challenge: "Detect defective products on a high-speed conveyor belt without internet dependency.",
+                solution: "Trained a quantized MobileNet model running on-device. <50ms inference time with 98% accuracy for real-time sorting."
+            }
+        };
+
+        window.openProjectModal = function(id) {
+            const p = projects[id];
+            if(!p) return;
+            
+            const titleEl = document.getElementById('modal-title');
+            const techEl = document.getElementById('modal-tech');
+            const challEl = document.getElementById('modal-challenge');
+            const solnEl = document.getElementById('modal-solution');
+
+            if(titleEl) titleEl.innerText = p.title;
+            if(techEl) techEl.innerText = p.tech;
+            if(challEl) challEl.innerText = p.challenge;
+            if(solnEl) solnEl.innerText = p.solution;
+            
+            const modal = document.getElementById('project-modal');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        };
+
+        window.closeProjectModal = function() {
+            const modal = document.getElementById('project-modal');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        };
+        
+        /* --- 3. CUSTOM CURSOR --- */
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        const hoverTriggers = document.querySelectorAll('[data-hover-trigger]');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            if(cursorDot) {
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+            }
+
+            if(cursorOutline) {
+                cursorOutline.animate({
+                    left: `${posX}px`,
+                    top: `${posY}px`
+                }, { duration: 150, fill: "forwards" });
+            }
+            
+            // Parallax Title
+            const title = document.getElementById('hero-title');
+            const moveX = (posX - window.innerWidth / 2) * 0.01;
+            const moveY = (posY - window.innerHeight / 2) * 0.01;
+            if(title) title.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+
+        hoverTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            trigger.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        /* --- 4. ESTIMATOR LOGIC --- */
+        const slider = document.getElementById('complexity-slider');
+        const display = document.getElementById('price-display');
+        const checks = document.querySelectorAll('input[type="checkbox"]');
+        
+        function updatePrice() {
+            const complexity = parseInt(slider.value);
+            let baseMin = 1000, baseMax = 3000;
+            const mult = complexity === 1 ? 1 : (complexity === 2 ? 2.5 : 5);
+            let addOnMin = 0, addOnMax = 0;
+            
+            if(document.getElementById('check-pcb').checked) { addOnMin += 500; addOnMax += 1500; }
+            if(document.getElementById('check-fw').checked) { addOnMin += 1000; addOnMax += 3000; }
+            if(document.getElementById('check-cloud').checked) { addOnMin += 1500; addOnMax += 4000; }
+            if(document.getElementById('check-ai').checked) { addOnMin += 2000; addOnMax += 5000; }
+            
+            const finalMin = (baseMin * mult) + addOnMin;
+            const finalMax = (baseMax * mult) + addOnMax;
+            
+            const fMin = finalMin >= 1000 ? `$${(finalMin/1000).toFixed(1)}k` : `$${finalMin}`;
+            const fMax = finalMax >= 1000 ? `$${(finalMax/1000).toFixed(1)}k` : `$${finalMax}`;
+            
+            display.innerText = `${fMin} - ${fMax}`;
+        }
+        
+        slider.addEventListener('input', updatePrice);
+        checks.forEach(c => c.addEventListener('change', updatePrice));
+
+        /* --- 5. CANVAS BACKGROUND --- */
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [];
+        const particleColor = 'rgba(0, 199, 206,'; 
+        let mouse = { x: null, y: null };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.3;
+                this.vy = (Math.random() - 0.5) * 0.3;
+                this.size = Math.random() * 2 + 1; 
+                this.baseX = this.x;
+                this.baseY = this.y;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+                
+                // Mouse Interaction (Optimized)
+                if(mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+                    if(distance < 200) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (200 - distance) / 200;
+                        // Move away from mouse
+                        this.x -= forceDirectionX * force * 2;
+                        this.y -= forceDirectionY * force * 2;
+                    } else {
+                        // Return to original trajectory subtly
+                        if (this.x !== this.baseX) this.x += (this.baseX - this.x) * 0.01;
+                    }
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `${particleColor} 0.5)`;
+                ctx.fill();
+            }
+        }
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            const count = width < 768 ? 30 : 60; 
+            for (let i = 0; i < count; i++) particles.push(new Particle());
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+                    if (distance < 150) {
+                        ctx.strokeStyle = `${particleColor} ${1 - distance/150 * 0.2})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+        
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        animateCanvas();
+
+        /* --- 6. GEMINI API --- */
+        const apiKey = "AIzaSyDdBK0JqUsKCWw-YmZZ4meE4voBXdVLj70"; 
+        window.generateBlueprint = async function() {
+            const input = document.getElementById('projectInput').value;
+            const terminal = document.getElementById('terminalContent');
+            const loading = document.getElementById('loadingState');
+            const btn = document.getElementById('generateBtn');
+
+            if (!input.trim()) {
+                alert("Please describe your project idea first.");
+                return;
+            }
+            terminal.classList.add('hidden');
+            loading.classList.remove('hidden');
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+
+            const systemPrompt = "You are the Senior IoT Architect at EdgeForge Labs. Output in Markdown. Sections: MCU, Connectivity, Sensors, Power, Edge AI.";
+            const userPrompt = `Client Idea: ${input}`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ contents: [{parts: [{ text: userPrompt }]}], systemInstruction: {parts: [{ text: systemPrompt }]} })
+                });
+                const data = await response.json();
+                const aiText = data.candidates[0].content.parts[0].text;
+                loading.classList.add('hidden');
+                terminal.classList.remove('hidden');
+                const htmlContent = marked.parse(aiText);
+                // Added color class
+                terminal.innerHTML = `<div class="prose-custom text-sm text-cyan-200 leading-relaxed font-mono ai-response">${htmlContent}</div>`;
+            } catch (error) {
+                loading.classList.add('hidden');
+                terminal.classList.remove('hidden');
+                terminal.innerHTML = `<div class="text-red-400">ERROR: ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
+            }
+        };
+
+        // Reveal Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    if(entry.target.classList.contains('step-item')) entry.target.classList.add('step-active');
+                }
+            });
+        }, { threshold: 0.2 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+
+</html>
+
