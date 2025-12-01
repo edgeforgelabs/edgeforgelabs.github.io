@@ -379,13 +379,20 @@
                 </div>
 
                 <!-- Cell 3: Industrial -->
-                <div class="bento-card rounded-2xl p-8 group cursor-pointer" onclick="window.openProjectModal('p2')" data-hover-trigger>
-                    <i class="ph ph-factory text-3xl text-cyberCyan mb-4"></i>
-                    <h3 class="font-display font-bold text-xl mb-2">Intelligent Industrial Automation (IIoT)</h3>
-                    <p class="text-xs text-gray-400 mb-4">
-                        Modernizing "legacy" industrial systems. Connecting PLCs (Siemens, Rockwell) to modern IT systems and implementing IIoT solutions (OPC UA).
-                    </p>
-                    <span class="text-xs font-bold text-white border-b border-cyberCyan pb-0.5 group-hover:text-cyberCyan transition-colors">Explore Solutions -></span>
+                <div class="bento-card rounded-2xl p-0 group cursor-pointer relative flex flex-col justify-end overflow-hidden" onclick="window.openProjectModal('p2')" data-hover-trigger>
+    
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('scada-sys.png');">
+                        <div class="absolute inset-0 bg-gradient-to-t from-deepBlue via-deepBlue/80 to-transparent"></div>
+                    </div>
+                
+                    <div class="p-8 relative z-10">
+                        <i class="ph ph-factory text-3xl text-cyberCyan mb-4"></i>
+                        <h3 class="font-display font-bold text-xl mb-2 text-white">Intelligent Industrial Automation (IIoT)</h3>
+                        <p class="text-xs text-gray-300 mb-4">
+                            Modernizing "legacy" industrial systems. Connecting PLCs (Siemens, Rockwell) to IT systems.
+                        </p>
+                        <span class="text-xs font-bold text-white border-b border-cyberCyan pb-0.5 group-hover:text-cyberCyan transition-colors">Explore Solutions -></span>
+                    </div>
                 </div>
 
                 <!-- Cell 4: Cloud -->
@@ -583,8 +590,8 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 h-[80vh] md:h-[600px]">
                 <div class="bg-black/50 flex items-center justify-center relative p-8">
-                     <div class="w-full h-64 bg-gradient-to-tr from-cyberCyan/10 to-secondaryTeal/10 rounded-lg flex items-center justify-center border border-white/5">
-                        <i class="ph ph-images text-6xl text-cyberCyan opacity-50"></i>
+                     <div class="bg-black/50 flex items-center justify-center relative p-0 overflow-hidden h-64 md:h-full">
+                        <img id="modal-img" src="" alt="Project Preview" class="w-full h-full object-cover opacity-80">
                     </div>
                     <p class="absolute bottom-8 text-xs text-gray-500">Project Screenshots would load here.</p>
                 </div>
@@ -730,38 +737,42 @@
             }
         };
 
-        // 2. Modal Logic 
+// 2. Modal Logic (Datos REALES con IMÁGENES)
         const projects = {
-            // PROYECTO 1: FPGA (Hardware Puro) - Mapeado a la tarjeta IoT
+            // PROYECTO 1: FPGA
             iot: {
                 title: "FPGA-SoC Real-Time HIL Simulation",
-                tech: "Zynq-7000 + Verilog + AXI Bus + Digital Twin",
+                tech: "Zynq-7000 + Verilog + AXI Bus + Digital Twins",
                 challenge: "Validating power electronics control algorithms requires expensive hardware prototypes and carries high risks of catastrophic failure during testing.",
-                solution: "Architected a Hardware-in-the-Loop (HIL) simulation on a Zynq-7000 SoC. Developed custom IP cores in Verilog and integrated PL/PS via AXI bus for high-speed, risk-free real-time validation."
+                solution: "Architected a Hardware-in-the-Loop (HIL) simulation on a Zynq-7000 SoC. Developed custom IP cores in Verilog and integrated PL/PS via AXI bus for high-speed, risk-free real-time validation.",
+                image: "fpga-soc.png" // <--- FOTO
             },
             
-            // PROYECTO 2: Predictive Maintenance (AI/Data) - Mapeado a la tarjeta AI
+            // PROYECTO 2: Predictive Maintenance
             ai: {
                 title: "Turbofan Predictive Maintenance (RUL)",
                 tech: "Python (Scikit-learn) + SQL + Plotly-Dash + ML",
                 challenge: "Predicting the Remaining Useful Life (RUL) of critical turbofan engines to prevent downtime, utilizing raw sensor data under Industry 4.0 principles.",
-                solution: "Built an end-to-end ETL pipeline and trained a RandomForestRegressor model. Achieved high predictive accuracy and visualized live engine health on an interactive Dash HMI."
+                solution: "Built an end-to-end ETL pipeline and trained a RandomForestRegressor model. Achieved high predictive accuracy and visualized live engine health on an interactive Dash HMI.",
+                image: "pred-maint.png" // <--- FOTO
             },
             
-            // PROYECTO 3: SCADA (Industrial) - Mapeado a la tarjeta Industrial
+            // PROYECTO 3: SCADA (IIoT)
             p2: {
                 title: "High-Availability Redundant SCADA",
                 tech: "Dual PLCs + SCADA + Industrial Ethernet",
                 challenge: "A critical chocolate production line required zero-downtime architecture. A standard single-PLC setup was a single point of failure.",
-                solution: "Implemented a redundant architecture with synchronized Dual PLCs and application servers. Engineered the failover logic to ensure continuous production even during hardware failure."
+                solution: "Implemented a redundant architecture with synchronized Dual PLCs and application servers. Engineered the failover logic to ensure continuous production even during hardware failure.",
+                image: "scada-sys.png" // <--- FOTO
             },
 
-            // PROYECTO 4: Robot (Extra por si lo quieres usar luego)
+            // PROYECTO 4: Robot (Opcional)
             p1: {
                 title: "Autonomous Mobile Robot Navigation",
                 tech: "MATLAB + Lidar Processing + Control Theory",
                 challenge: "Developing core logic for a robot to perceive dynamic environments and avoid obstacles in real-time.",
-                solution: "Designed advanced trajectory tracking algorithms and a Lidar data filter. Implemented repulsive force logic for seamless obstacle avoidance."
+                solution: "Designed advanced trajectory tracking algorithms and a Lidar data filter. Implemented repulsive force logic for seamless obstacle avoidance.",
+                image: "robot-nav.png" // <--- FOTO
             }
         };
 
@@ -769,15 +780,21 @@
             const p = projects[id];
             if(!p) return;
             
+            // Actualizar textos
             const titleEl = document.getElementById('modal-title');
             const techEl = document.getElementById('modal-tech');
             const challEl = document.getElementById('modal-challenge');
             const solnEl = document.getElementById('modal-solution');
+            
+            // Actualizar IMAGEN (Nueva línea)
+            const imgEl = document.getElementById('modal-img');
 
             if(titleEl) titleEl.innerText = p.title;
             if(techEl) techEl.innerText = p.tech;
             if(challEl) challEl.innerText = p.challenge;
             if(solnEl) solnEl.innerText = p.solution;
+            // Cargar la imagen correcta
+            if(imgEl) imgEl.src = p.image; 
             
             const modal = document.getElementById('project-modal');
             const content = document.getElementById('modal-content');
@@ -1010,6 +1027,7 @@
 </body>
 
 </html>
+
 
 
 
