@@ -730,31 +730,38 @@
             }
         };
 
-        // 2. Modal Logic (Updated with data)
+        // 2. Modal Logic 
         const projects = {
-            p1: {
-                title: "Smart Agri-Sensor Array",
-                tech: "LoRaWAN + ESP32 + Solar",
-                challenge: "The client needed to monitor soil moisture across a 50-hectare farm without cellular coverage.",
-                solution: "Designed a custom PCB with ESP32 and LoRaWAN module. Implemented deep-sleep cycles allowing 5 years of operation."
-            },
-            p2: {
-                title: "Predictive Maintenance Dashboard",
-                tech: "Python + SCADA + React",
-                challenge: "Factory managers reacted to breakdowns only after they happened, causing 15% downtime.",
-                solution: "Built a Python middleware to read Modbus data from legacy PLCs, analyze vibration trends, and visualize 'Health Scores'."
-            },
+            // PROYECTO 1: FPGA (Hardware Puro) - Mapeado a la tarjeta IoT
             iot: {
-                title: "Industrial IoT Gateway",
-                tech: "STM32 + 4G LTE + MQTT",
-                challenge: "Bridge legacy RS485 sensors to the cloud securely with remote OTA update capabilities.",
-                solution: "Engineered a robust gateway with TLS 1.3 encryption, local buffering for network outages, and dual-bank firmware updates."
+                title: "FPGA-SoC Real-Time HIL Simulation",
+                tech: "Zynq-7000 + Verilog + AXI Bus + Digital Twin",
+                challenge: "Validating power electronics control algorithms requires expensive hardware prototypes and carries high risks of catastrophic failure during testing.",
+                solution: "Architected a Hardware-in-the-Loop (HIL) simulation on a Zynq-7000 SoC. Developed custom IP cores in Verilog and integrated PL/PS via AXI bus for high-speed, risk-free real-time validation."
             },
+            
+            // PROYECTO 2: Predictive Maintenance (AI/Data) - Mapeado a la tarjeta AI
             ai: {
-                title: "Edge Vision Quality Control",
-                tech: "ESP32-S3 + TensorFlow Lite",
-                challenge: "Detect defective products on a high-speed conveyor belt without internet dependency.",
-                solution: "Trained a quantized MobileNet model running on-device. <50ms inference time with 98% accuracy for real-time sorting."
+                title: "Turbofan Predictive Maintenance (RUL)",
+                tech: "Python (Scikit-learn) + SQL + Plotly-Dash + ML",
+                challenge: "Predicting the Remaining Useful Life (RUL) of critical turbofan engines to prevent downtime, utilizing raw sensor data under Industry 4.0 principles.",
+                solution: "Built an end-to-end ETL pipeline and trained a RandomForestRegressor model. Achieved high predictive accuracy and visualized live engine health on an interactive Dash HMI."
+            },
+            
+            // PROYECTO 3: SCADA (Industrial) - Mapeado a la tarjeta Industrial
+            p2: {
+                title: "High-Availability Redundant SCADA",
+                tech: "Dual PLCs + SCADA + Industrial Ethernet",
+                challenge: "A critical chocolate production line required zero-downtime architecture. A standard single-PLC setup was a single point of failure.",
+                solution: "Implemented a redundant architecture with synchronized Dual PLCs and application servers. Engineered the failover logic to ensure continuous production even during hardware failure."
+            },
+
+            // PROYECTO 4: Robot (Extra por si lo quieres usar luego)
+            p1: {
+                title: "Autonomous Mobile Robot Navigation",
+                tech: "MATLAB + Lidar Processing + Control Theory",
+                challenge: "Developing core logic for a robot to perceive dynamic environments and avoid obstacles in real-time.",
+                solution: "Designed advanced trajectory tracking algorithms and a Lidar data filter. Implemented repulsive force logic for seamless obstacle avoidance."
             }
         };
 
@@ -1003,5 +1010,6 @@
 </body>
 
 </html>
+
 
 
