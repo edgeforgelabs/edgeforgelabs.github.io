@@ -856,33 +856,66 @@
             trigger.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
         });
 
-        /* --- 4. ESTIMATOR LOGIC --- */
+/* --- 4. ESTIMATOR LOGIC (UPDATED WITH REAL UPWORK PRICES) --- */
         const slider = document.getElementById('complexity-slider');
         const display = document.getElementById('price-display');
         const checks = document.querySelectorAll('input[type="checkbox"]');
         
         function updatePrice() {
-            const complexity = parseInt(slider.value);
-            let baseMin = 1000, baseMax = 3000;
-            const mult = complexity === 1 ? 1 : (complexity === 2 ? 2.5 : 5);
-            let addOnMin = 0, addOnMax = 0;
+            // 1 = Starter (MVP), 2 = Standard, 3 = Advanced
+            const complexity = parseInt(slider.value); 
+            let minTotal = 0;
             
-            if(document.getElementById('check-pcb').checked) { addOnMin += 500; addOnMax += 1500; }
-            if(document.getElementById('check-fw').checked) { addOnMin += 1000; addOnMax += 3000; }
-            if(document.getElementById('check-cloud').checked) { addOnMin += 1500; addOnMax += 4000; }
-            if(document.getElementById('check-ai').checked) { addOnMin += 2000; addOnMax += 5000; }
+            // --- Lógica de Precios Exactos de Upwork ---
             
-            const finalMin = (baseMin * mult) + addOnMin;
-            const finalMax = (baseMax * mult) + addOnMax;
+            // 1. HARDWARE (IoT Prototype) -> Precios: $350, $950, $1650
+            if(document.getElementById('check-pcb').checked) { 
+                const prices = [350, 950, 1650];
+                minTotal += prices[complexity - 1];
+            }
             
-            const fMin = finalMin >= 1000 ? `$${(finalMin/1000).toFixed(1)}k` : `$${finalMin}`;
-            const fMax = finalMax >= 1000 ? `$${(finalMax/1000).toFixed(1)}k` : `$${finalMax}`;
+            // 2. INDUSTRIAL (Cloud/Dashboard) -> Precios: $450, $1250, $2250
+            if(document.getElementById('check-cloud').checked) { 
+                const prices = [450, 1250, 2250];
+                minTotal += prices[complexity - 1];
+            }
             
-            display.innerText = `${fMin} - ${fMax}`;
+            // 3. TINYML (Edge AI) -> Precios: $500, $1500, $2500
+            if(document.getElementById('check-ai').checked) { 
+                const prices = [500, 1500, 2500];
+                minTotal += prices[complexity - 1];
+            }
+            
+            // 4. FIRMWARE EXTRA -> Precios estimados de esfuerzo: $200, $500, $800
+            // (Si seleccionan esto solo, o como añadido extra)
+            if(document.getElementById('check-fw').checked) { 
+                const prices = [200, 500, 800];
+                minTotal += prices[complexity - 1];
+            }
+
+            // Si no hay nada seleccionado, mostrar 0
+            if (minTotal === 0) {
+                 display.innerText = `$0`;
+                 return;
+            }
+
+            // Calcular Rango: (Precio Base) hasta (Precio Base + 20% de buffer)
+            // El buffer cubre comisiones y pequeños imprevistos
+            let finalMin = minTotal;
+            let finalMax = Math.round(minTotal * 1.2); 
+            
+            // Formateo visual (K para miles)
+            const format = (num) => num >= 1000 ? `$${(num/1000).toFixed(1)}k` : `$${num}`;
+            
+            display.innerText = `${format(finalMin)} - ${format(finalMax)}`;
         }
         
+        // Event Listeners
         slider.addEventListener('input', updatePrice);
         checks.forEach(c => c.addEventListener('change', updatePrice));
+        
+        // Inicializar
+        updatePrice();
 
         /* --- 5. CANVAS BACKGROUND --- */
         const canvas = document.getElementById('network-canvas');
@@ -1031,6 +1064,7 @@
 </body>
 
 </html>
+
 
 
 
