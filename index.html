@@ -741,42 +741,50 @@
             }
         };
 
-// 2. Modal Logic (Datos REALES con IMÁGENES)
+// 2. Modal Logic (Datos REALES + Links Específicos a Catálogos)
         const projects = {
-            // PROYECTO 1: FPGA
+            // PROYECTO 1: FPGA -> Link al Catálogo de HARDWARE (IoT Prototype)
             iot: {
                 title: "FPGA-SoC Real-Time HIL Simulation",
                 tech: "Zynq-7000 + Verilog + Embedded Systems + Digital Twins",
                 challenge: "Validating power electronics control algorithms requires expensive hardware prototypes and carries high risks of catastrophic failure during testing.",
                 solution: "Architected a Hardware-in-the-Loop (HIL) simulation on a Zynq-7000 SoC. Developed custom IP cores in Verilog and integrated PL/PS via AXI bus for high-speed, risk-free real-time validation.",
-                image: "fpga-soc.png" // <--- FOTO
+                image: "fpga-soc.png",
+                // ↓↓↓ PEGA AQUÍ TU LINK DEL CATÁLOGO DE HARDWARE/PCB ↓↓↓
+                upworkUrl: "https://www.upwork.com/services/product/design-a-production-ready-iot-prototype-pcb-design-firmware-1989389036554151400?ref=project_share" 
             },
             
-            // PROYECTO 2: Predictive Maintenance
+            // PROYECTO 2: Predictive Maintenance -> Link al Catálogo de TINYML (AI)
             ai: {
                 title: "Turbofan Predictive Maintenance (RUL)",
                 tech: "Python (Scikit-learn) + SQL + Plotly-Dash + ML",
                 challenge: "Predicting the Remaining Useful Life (RUL) of critical turbofan engines to prevent downtime, utilizing raw sensor data under Industry 4.0 principles.",
                 solution: "Built an end-to-end ETL pipeline and trained a RandomForestRegressor model. Achieved high predictive accuracy and visualized live engine health on an interactive Dash HMI.",
-                image: "pred-maint.png" // <--- FOTO
+                image: "pred-maint.png",
+                // ↓↓↓ PEGA AQUÍ TU LINK DEL CATÁLOGO DE TINYML / AI ↓↓↓
+                upworkUrl: "https://www.upwork.com/services/product/development-it-custom-tinyml-edge-ai-solutions-for-microcontrollers-1996632622518669004?ref=project_share"
             },
             
-            // PROYECTO 3: SCADA (IIoT)
+            // PROYECTO 3: SCADA (IIoT) -> Link al Catálogo de INDUSTRIAL (IIoT)
             p2: {
                 title: "High-Availability Redundant SCADA",
                 tech: "Dual PLCs + SCADA + Industry 4.0 + Automated Control",
                 challenge: "A critical chocolate production line required zero-downtime architecture. A standard single-PLC setup was a single point of failure.",
                 solution: "Implemented a redundant architecture with synchronized Dual PLCs and application servers. Engineered the failover logic to ensure continuous production even during hardware failure.",
-                image: "scada-sys.png" // <--- FOTO
+                image: "scada-sys.png",
+                // ↓↓↓ PEGA AQUÍ TU LINK DEL CATÁLOGO DE IIoT / SCADA ↓↓↓
+                upworkUrl: "https://www.upwork.com/services/product/development-it-a-professional-iiot-scada-dashboard-for-industrial-monitoring-1996266807942903296?ref=project_share"
             },
 
-            // PROYECTO 4: Robot (Opcional)
+            // PROYECTO 4: Robot -> Link General (o al de Hardware)
             p1: {
                 title: "Autonomous Mobile Robot Navigation",
                 tech: "MATLAB + Lidar Processing + Control Theory",
                 challenge: "Developing core logic for a robot to perceive dynamic environments and avoid obstacles in real-time.",
                 solution: "Designed advanced trajectory tracking algorithms and a Lidar data filter. Implemented repulsive force logic for seamless obstacle avoidance.",
-                image: "robot-nav.png" // <--- FOTO
+                image: "robot-nav.png",
+                // Link al perfil general por defecto
+                upworkUrl: "https://www.upwork.com/freelancers/~016b8f649e176d81df"
             }
         };
 
@@ -789,16 +797,22 @@
             const techEl = document.getElementById('modal-tech');
             const challEl = document.getElementById('modal-challenge');
             const solnEl = document.getElementById('modal-solution');
-            
-            // Actualizar IMAGEN (Nueva línea)
             const imgEl = document.getElementById('modal-img');
+            
+            // SELECCIONAR EL BOTÓN DE "HIRE" DENTRO DEL MODAL
+            // Buscamos la etiqueta <a> dentro del div con id 'project-modal'
+            const hireBtn = document.querySelector('#project-modal a');
 
             if(titleEl) titleEl.innerText = p.title;
             if(techEl) techEl.innerText = p.tech;
             if(challEl) challEl.innerText = p.challenge;
             if(solnEl) solnEl.innerText = p.solution;
-            // Cargar la imagen correcta
             if(imgEl) imgEl.src = p.image; 
+            
+            // ACTUALIZAR EL LINK DEL BOTÓN
+            if(hireBtn && p.upworkUrl) {
+                hireBtn.href = p.upworkUrl;
+            }
             
             const modal = document.getElementById('project-modal');
             const content = document.getElementById('modal-content');
@@ -1064,6 +1078,7 @@
 </body>
 
 </html>
+
 
 
 
