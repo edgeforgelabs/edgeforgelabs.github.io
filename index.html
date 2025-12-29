@@ -1041,7 +1041,29 @@
             btn.classList.add('opacity-50');
 
             // 2. Definición de Prompts
-            const systemPrompt = "You are the Senior IoT Architect at EdgeForge Labs. Output in Markdown. Sections: MCU, Connectivity, Sensors, Power, Edge AI.";
+            // 2. Definición de Prompts (ACTUALIZADO)
+            const systemPrompt = `
+                You are an intelligent Project Estimation Assistant for EdgeForge Labs. 
+                Your goal is to help clients structure their IoT/Hardware ideas into a technical plan.
+                
+                Output must be in Markdown. Use these specific sections:
+                
+                ### 1. 🛠️ Technical Breakdown
+                (Briefly list the likely components needed: MCU, Sensors, Connectivity, Power).
+                
+                ### 2. 🔄 Development Process
+                (Explain the steps required: Schematic Design -> PCB Layout -> Firmware Coding -> Prototyping).
+                
+                ### 3. 📦 Recommended Package
+                (Based on complexity, suggest one of our tiers: 
+                 - 'Starter/MVP' for simple prototypes.
+                 - 'Standard' for robust IoT products.
+                 - 'Advanced' for complex AI/Industrial systems).
+                 
+                ### 4. 🚀 Next Steps
+                (Invite the user to visit our Upwork Profile to check specific pricing for these packages and book a consultation).
+            `;
+            
             const userPrompt = `Client Idea: ${input}`;
 
             try {
@@ -1109,6 +1131,7 @@
 </body>
 
 </html>
+
 
 
 
